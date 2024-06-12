@@ -1,7 +1,38 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import StylePopular from './Popular.module.css'
+import axios from 'axios'
 
 function Popular() {
+    const [weatherData, setWeatherData] = useState(null)
+    const [loadingData, setLoadingData] = useState(true)
+    const city = 'USA'
+    const API_KEY = '109c3653b9c258e6db20576bb6a8ad27'
+
+    useEffect(() => {
+        const fetchWeather = async () => {
+            setLoadingData(true)
+            try {
+                const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&APPID=${API_KEY}`)
+                setWeatherData(response.data)
+                setLoadingData(false)
+            } catch (err) {
+                console.log(err)
+                setLoadingData(false)
+            }
+        }
+        fetchWeather()
+    }, [])
+
+    if (loadingData) {
+        return <div>Loading...</div>
+    }
+
+    if (!weatherData) {
+        return null
+    }
+
+    console.log(weatherData);
+
     return (
         <div>
             <div className={StylePopular['weather-card']}>
@@ -11,29 +42,39 @@ function Popular() {
                 </div>
                 <div className={StylePopular['city-weather']}>
                     <div className={StylePopular.city}>
-                        <img src="https://ssl.gstatic.com/onebox/weather/64/sunny_s_cloudy.png" alt="Cloudy" />
-                        <span className={StylePopular.dv}>Delhi</span>
-                        <span className={StylePopular.weather}>Partly Cloudy</span>
+                        <img src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`}
+                            alt="Weather Icon"
+                        />
+                        <span className={StylePopular.dv}>{weatherData.name}</span>
+                        <span className={StylePopular.weather}>{weatherData.weather[0].main}</span>
                     </div>
                     <div className={StylePopular.city}>
-                        <img src="https://ssl.gstatic.com/onebox/weather/64/sunny_s_cloudy.png" alt="Drizzle Rain" />
-                        <span className={StylePopular.dv}>Mumbai</span>
-                        <span className={StylePopular.weather}>Drizzle Rain</span>
+                        <img src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`}
+                            alt="Weather Icon"
+                        />
+                        <span className={StylePopular.dv}>{weatherData.name}</span>
+                        <span className={StylePopular.weather}>{weatherData.weather[0].main}</span>
                     </div>
                     <div className={StylePopular.city}>
-                        <img src="https://ssl.gstatic.com/onebox/weather/64/sunny_s_cloudy.png" alt="Heavy Rain" />
-                        <span className={StylePopular.dv}>Hyderabad</span>
-                        <span className={StylePopular.weather}>Heavy Rain</span>
+                        <img src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`}
+                            alt="Weather Icon"
+                        />
+                        <span className={StylePopular.dv}>{weatherData.name}</span>
+                        <span className={StylePopular.weather}>{weatherData.weather[0].main}</span>
                     </div>
                     <div className={StylePopular.city}>
-                        <img src="https://ssl.gstatic.com/onebox/weather/64/sunny_s_cloudy.png" alt="Light Thunders" />
-                        <span className={StylePopular.dv}>Bangalore</span>
-                        <span className={StylePopular.weather}>Light Thunders</span>
+                        <img src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`}
+                            alt="Weather Icon"
+                        />
+                        <span className={StylePopular.dv}>{weatherData.name}</span>
+                        <span className={StylePopular.weather}>{weatherData.weather[0].main}</span>
                     </div>
                     <div className={StylePopular.city}>
-                        <img src="https://ssl.gstatic.com/onebox/weather/64/sunny_s_cloudy.png" alt="Mostly Sunny" />
-                        <span className={StylePopular.dv}>Kolkata</span>
-                        <span className={StylePopular.weather}>Mostly Sunny</span>
+                        <img src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`}
+                            alt="Weather Icon"
+                        />
+                        <span className={StylePopular.dv}>{weatherData.name}</span>
+                        <span className={StylePopular.weather}>{weatherData.weather[0].main}</span>
                     </div>
                 </div>
             </div>
