@@ -1,13 +1,14 @@
-import React, { useContext } from 'react'
-import StyleNav from './Nav.module.css'
-import CityContext from '../Context/CityContext'
+import React, { useContext } from 'react';
+import StyleNav from './Nav.module.css';
+import CityContext from '../Context/CityContext';
 
 function Nav() {
 
-    const {setCity} = useContext(CityContext)
+    const { setCity } = useContext(CityContext);
+    
     const handleChange = (e) => {
-        setCity(e.target.value)
-    }
+        setCity(e.target.value);
+    };
 
     return (
         <div>
@@ -23,7 +24,7 @@ function Nav() {
                  onChange={handleChange} />
             </div>
         </div>
-    )
+    );
 }
 
-export default Nav
+export default Nav;

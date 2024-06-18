@@ -5,16 +5,16 @@ import CityContext from '../Context/CityContext';
 
 function Forecast() {
     const { city } = useContext(CityContext);
-    const {cnt} = 6
     const [weatherData, setWeatherData] = useState(null);
     const [loadingData, setLoadingData] = useState(true);
-    const API_KEY = '109c3653b9c258e6db20576bb6a8ad27';
+    const [days, setDays] = useState(7);
+    const API_KEY = '096bb3d057f540f69db62932241406';
 
     useEffect(() => {
         const fetchWeather = async () => {
             setLoadingData(true);
             try {
-                const response = await axios.get(`api.openweathermap.org/data/2.5/forecast/daily?q=${city}&cnt=${cnt}&appid=${API_KEY}`);
+                const response = await axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${city}&days=${days}&aqi=yes&alerts=yes`);
                 setWeatherData(response.data);
                 setLoadingData(false);
             } catch (err) {
@@ -24,9 +24,7 @@ function Forecast() {
         };
 
         fetchWeather();
-    }, [city]);
-
-    console.log('forecast', weatherData);
+    }, [city, days]);
 
     if (loadingData) {
         return <div>Loading...</div>;
@@ -36,7 +34,9 @@ function Forecast() {
         return null;
     }
 
-    console.log(weatherData);
+    const forecastDays = weatherData.forecast.forecastday.slice(0, 6);
+
+    console.log('forecast', weatherData);
 
     return (
         <div>
@@ -44,16 +44,26 @@ function Forecast() {
                 <div className={StyleForecast['card-header']}>
                     <span className={StyleForecast.title}>Forecast</span>
                     <div className={StyleForecast['toggle-buttons']}>
-                        <button className={StyleForecast.toggle}>7 Days</button>
-                        <button className={StyleForecast.toggle}>10 Days</button>
+                        <button 
+                            className={StyleForecast.toggle} 
+                            onClick={() => setDays(3)}
+                        >
+                            3 Days
+                        </button>
+                        <button 
+                            className={StyleForecast.toggle} 
+                            onClick={() => setDays(6)}
+                        >
+                            6 Days
+                        </button>
                     </div>
                 </div>
                 <div className={StyleForecast['forecast-list']}>
-                    {weatherData.list.slice(0,6).map((item, index) => (
+                    {forecastDays.map((item, index) => (
                         <div key={index} className={StyleForecast.day}>
-                            <img src={`https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`} alt="" />
-                            <span className={StyleForecast.temp}>{item.main.feels_like}° / {item.main.humidity}%</span>
-                            <span className={StyleForecast.date}>{item.dt_txt}</span>
+                            <img src={`https:${item.day.condition.icon}`} alt={item.day.condition.text} />
+                            <span className={StyleForecast.temp}>{item.day.maxtemp_c}°C / {item.day.avghumidity}%</span>
+                            <span className={StyleForecast.date}>{item.date}</span>
                         </div>
                     ))}
                 </div>

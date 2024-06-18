@@ -7,6 +7,7 @@ function Current() {
     const { city } = useContext(CityContext)
     const [weatherData, setWeatherData] = useState(null)
     const [loadingData, setLoadingData] = useState(true)
+    const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString())
     const API_KEY = '109c3653b9c258e6db20576bb6a8ad27'
 
     useEffect(() => {
@@ -26,6 +27,16 @@ function Current() {
         }
     }, [city])
 
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            setCurrentTime(new Date().toLocaleTimeString())
+        }, 1000); 
+
+        return () => {
+            clearInterval(intervalId); 
+        };
+    }, []);
+
     if (loadingData) {
         return <div>Loading...</div>
     }
@@ -33,14 +44,13 @@ function Current() {
     if (!weatherData) {
         return null
     }
-
-    console.log(weatherData);
+    console.log('current', weatherData);
     return (
         <div>
             <div className={StyleCurrent['weather-card']}>
                 <div className={StyleCurrent['weather-header']}>
-                    <div className={StyleCurrent['current-weather']}>Current Weather</div>
-                    <div className={StyleCurrent.time}>{new Date().toLocaleTimeString()}</div>
+                    <div className={StyleCurrent['current-weather']}>{weatherData.name}</div>
+                    <div className={StyleCurrent.time}>{currentTime}</div>
                 </div>
                 <div className={StyleCurrent['weather-info']}>
                     <div className={StyleCurrent['weather-icon']}>
